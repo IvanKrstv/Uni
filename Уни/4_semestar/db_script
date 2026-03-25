@@ -1,0 +1,136 @@
+CREATE TABLE Nationality
+(
+	nationality_id INTEGER NOT NULL,
+	nationality_name VARCHAR2(30)
+);
+ALTER TABLE Nationality ADD CONSTRAINT Nationality_PK PRIMARY KEY (nationality_id);
+
+
+
+CREATE TABLE Destination
+(
+	destination_id INTEGER NOT NULL,
+	city_name VARCHAR2(30),
+	nationality_id INTEGER NOT NULL
+);
+ALTER TABLE Destination ADD CONSTRAINT Destination_PK PRIMARY KEY (destination_id);
+ALTER TABLE Destination ADD CONSTRAINT Dest_Nation_FK FOREIGN KEY (nationality_id) REFERENCES Nationality (nationality_id);
+
+
+
+CREATE TABLE Passenger
+(
+	passport_id INTEGER NOT NULL,
+	passenger_name VARCHAR2(50),
+	nationality_id INTEGER NOT NULL
+);
+ALTER TABLE Passenger ADD CONSTRAINT Passenger_PK PRIMARY KEY (passport_id);
+ALTER TABLE Passenger ADD CONSTRAINT Passenger_Nation_FK FOREIGN KEY (nationality_id) REFERENCES Nationality (nationality_id);
+
+
+
+CREATE TABLE Company
+(
+	company_id INTEGER NOT NULL,
+	company_name VARCHAR2(30)
+);
+ALTER TABLE Company ADD CONSTRAINT Company_PK PRIMARY KEY (company_id);
+
+
+
+CREATE TABLE Model
+(
+	model_id INTEGER NOT NULL,
+	model_name VARCHAR2(50),
+	model_capacity INTEGER,
+	company_id INTEGER NOT NULL
+);
+ALTER TABLE Model ADD CONSTRAINT Model_PK PRIMARY KEY (model_id);
+ALTER TABLE Model ADD CONSTRAINT Model_Comp_FK FOREIGN KEY (company_id) REFERENCES Company (company_id);
+
+
+
+CREATE TABLE Plane
+(
+	plane_id INTEGER NOT NULL,
+	model_id INTEGER NOT NULL
+);
+ALTER TABLE Plane ADD CONSTRAINT Plane_PK PRIMARY KEY (plane_id);
+ALTER TABLE Plane ADD CONSTRAINT Plane_Model_FK FOREIGN KEY (model_id) REFERENCES Model (model_id);
+
+
+
+CREATE TABLE Flight
+(
+	flight_id INTEGER NOT NULL,
+	flight_date DATE,
+	price NUMBER(10,2),
+	plane_id INTEGER NOT NULL,
+	from_destination_id INTEGER NOT NULL,
+	to_destination_id INTEGER NOT NULL
+);
+ALTER TABLE Flight ADD CONSTRAINT Flight_PK PRIMARY KEY (flight_id);
+ALTER TABLE Flight ADD CONSTRAINT Flight_Plane_FK FOREIGN KEY (plane_id) REFERENCES Plane (plane_id);
+ALTER TABLE Flight ADD CONSTRAINT Flight_FromDest_FK FOREIGN KEY (from_destination_id) REFERENCES Destination (destination_id);
+ALTER TABLE Flight ADD CONSTRAINT Flight_ToDest_FK FOREIGN KEY (to_destination_id) REFERENCES Destination (destination_id);
+
+
+
+CREATE TABLE Position
+(
+	position_id INTEGER NOT NULL,
+	position_name VARCHAR2(30)
+);
+ALTER TABLE Position ADD CONSTRAINT Position_PK PRIMARY KEY (position_id);
+
+
+
+
+CREATE TABLE Employee
+(
+	employee_id INTEGER NOT NULL,
+	employee_name VARCHAR2(50),
+	phone_number VARCHAR2(13),
+	position_id INTEGER NOT NULL
+);
+ALTER TABLE Employee ADD CONSTRAINT Employee_PK PRIMARY KEY (employee_id);
+ALTER TABLE Employee ADD CONSTRAINT Employee_Pos_FK FOREIGN KEY (position_id) REFERENCES Position (position_id);
+
+
+
+CREATE TABLE SeatClass
+(
+	seat_class_id INTEGER NOT NULL,
+	seat_class_name VARCHAR2(20),
+	percent_discount INTEGER
+);
+ALTER TABLE SeatClass ADD CONSTRAINT SeatClass_PK PRIMARY KEY (seat_class_id);
+
+
+
+CREATE TABLE Seat
+(
+	seat_id INTEGER NOT NULL,
+	seat_name VARCHAR2(10),
+	seat_class_id INTEGER NOT NULL,
+    plane_id INTEGER NOT NULL
+);
+ALTER TABLE Seat ADD CONSTRAINT Seat_PK PRIMARY KEY (seat_id);
+ALTER TABLE Seat ADD CONSTRAINT Seat_SeatClass_FK FOREIGN KEY (seat_class_id) REFERENCES SeatClass (seat_class_id);
+ALTER TABLE Seat ADD CONSTRAINT Seat_Plane_FK FOREIGN KEY (plane_id) REFERENCES Plane (plane_id);
+
+
+
+CREATE TABLE Ticket
+(
+	ticket_id INTEGER NOT NULL,
+	seat_id INTEGER NOT NULL,
+	flight_id INTEGER NOT NULL,
+	passenger_id INTEGER NOT NULL,
+	employee_id INTEGER NOT NULL
+);
+ALTER TABLE Ticket ADD CONSTRAINT Ticket_PK PRIMARY KEY (ticket_id);
+ALTER TABLE Ticket ADD CONSTRAINT Ticket_Seat_FK FOREIGN KEY (seat_id) REFERENCES Seat (seat_id);
+ALTER TABLE Ticket ADD CONSTRAINT Ticket_Flight_FK FOREIGN KEY (flight_id) REFERENCES Flight (flight_id);	
+ALTER TABLE Ticket ADD CONSTRAINT Ticket_Passenger_FK FOREIGN KEY (passenger_id) REFERENCES Passenger (passport_id);	
+ALTER TABLE Ticket ADD CONSTRAINT Ticket_Employee_FK FOREIGN KEY (employee_id) REFERENCES Employee (employee_id);
