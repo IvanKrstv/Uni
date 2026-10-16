@@ -1,5 +1,5 @@
-.pdf
-.docx
-.pptx
+*.pdf
+*.docx
+*.pptx
 *.zip
 .idea
