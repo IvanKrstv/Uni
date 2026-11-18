@@ -3,3 +3,5 @@
 *.pptx
 *.zip
 .idea
+epl-prediction/
+.DS_Store
